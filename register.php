@@ -1,0 +1,386 @@
+<?php
+	session_start();
+	include 'config/connect.php';
+
+	if(!empty($_POST)) {
+
+		$fname = trim($_POST['fname']);
+		$lname = trim($_POST['lname']);
+		$username = trim($_POST['username']);
+		$password = trim($_POST['password']);
+		$try_password = trim($_POST['try_password']);
+
+        if($password !== $try_password){
+            header('Location: index.php?alert=passwordNotMatch!');
+            exit();
+        }
+
+       try{
+            $sql = "INSERT INTO `member` (`fname`, `lname`, `date_time`, `username`, `password`) VALUES (?, ?, NOW(), ?, MD5(?));";
+            $q = $conn->prepare($sql);
+            $q->execute(array($fname, $lname, $username, $password));
+
+            header('Location: login.php?alert=regiserSuccess');
+       }catch(Exception $e){
+            header('Location: login.php?alert=regiserFail!');
+       }
+	}
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>:: web board ::</title>
+	<link rel="stylesheet" href="dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="dist/css/web_board.css">
+    <!-- Bootstrap -->
+	<link href="../zeen/zeenn/css/bootstrap-4.4.1.css" rel="stylesheet">
+	<style type="text/css">
+	body {
+    background-image: url(../zeen/zeenn/pngtree-yellow-white-broken-paper-old-background-picture-image_1403698.jpg);
+}
+    </style>
+</head>
+  <body>
+  <!-- body code goes here -->
+
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
+	<script src="../zeen/zeenn/js/jquery-3.4.1.min.js"></script>
+
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="../zeen/zeenn/js/popper.min.js"></script> 
+	<script src="../zeen/zeenn/js/bootstrap-4.4.1.js"></script>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+      <symbol id="check2" viewBox="0 0 16 16">
+        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"></path>
+      </symbol>
+      <symbol id="circle-half" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"></path>
+      </symbol>
+      <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+        <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"></path>
+        <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"></path>
+      </symbol>
+      <symbol id="sun-fill" viewBox="0 0 16 16">
+        <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"></path>
+      </symbol>
+    </svg>
+
+    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+      
+      <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+        <li>
+          <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="light" aria-pressed="true">
+            <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#sun-fill"></use></svg>
+            Light
+            <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+            <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#moon-stars-fill"></use></svg>
+            Dark
+            <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" aria-pressed="false">
+            <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#circle-half"></use></svg>
+            Auto
+            <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="aperture" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"></path>
+  </symbol>
+  <symbol id="cart" viewBox="0 0 16 16">
+    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+  </symbol>
+  <symbol id="chevron-right" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"></path>
+  </symbol>
+</svg>
+
+<div class="container">
+  <header class="border-bottom lh-1 py-3">
+    <div class="row flex-nowrap justify-content-between align-items-center bg-white">
+     
+      <div class="col-4 text-center text-lg-left col-xl-11">
+        <marquee direction="left">๕ จุดเช็คอินโบราณสถาน อำเภอเมือง นครศรีธรรมราช</marquee>
+      </div>
+      <div class="col-4 d-flex justify-content-end align-items-center">
+        <a href="#" aria-label="Search">
+          
+        </a>
+        
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-scroller py-1 mb-3 border-bottom">
+    <nav class="nav nav-underline justify-content-between bg-dark">
+      <a class="nav-item nav-link link-body-emphasis active text-white" href="index.html">หน้าหลัก&nbsp;</a>
+		
+      <div class="dropdown show nav-link"> <a class=" dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> พระธาตุเมืองคอน </a>
+        <div class="dropdown-menu">
+          
+          <a class="dropdown-item" href="in2.html">ประวัติ</a>
+			<a class="dropdown-item" href="in3.html">ตำแหน่งที่ตั้ง</a>
+			<a class="dropdown-item" href="in4.html">ความน่าสนใจจากผู้จัดทำ</a>
+		  </div>
+      </div>
+		
+      <div class="dropdown show nav-link"> <a class=" dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> บ้านท่านขุน&nbsp;&nbsp; </a>
+        <div class="dropdown-menu">
+         
+          <a class="dropdown-item" href="in5.html">ประวัติ</a>
+			<a class="dropdown-item" href="in6.html">ตำแหน่งที่ตั้ง</a>
+			<a class="dropdown-item" href="in7.html">ความน่าสนใจจากผู้จัดทำ</a>
+		  </div>
+      </div>
+		
+      <div class="dropdown show nav-link"> <a class=" dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> กำแพงเมืองเก่า&nbsp; </a>
+        <div class="dropdown-menu">
+          
+          <a class="dropdown-item" href="in8.html">ประวัติ</a> 
+			<a class="dropdown-item" href="in9.html">ตำแหน่งที่ตั้ง</a>
+			<a class="dropdown-item" href="in10.html">ความน่าสนใจจากผู้จัดทำ</a>
+		  </div>
+      </div>
+		
+      <div class="dropdown show nav-link"> <a class=" dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> ศาลหลักเมือง </a>
+        <div class="dropdown-menu">
+          
+          <a class="dropdown-item" href="in11.html">ประวัติ</a>
+			<a class="dropdown-item" href="in12.html">ตำแหน่งที่ตั้ง</a>
+			<a class="dropdown-item" href="in13.html">ความน่าสนใจจากผู้จัดทำ</a>
+		  </div>
+      </div>
+		
+      <div class="dropdown show nav-link"> <a class=" dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> พิพิธภัณฑ์นครศรีฯ </a>
+        <div class="dropdown-menu">
+          
+          <a class="dropdown-item" href="in14.html">ประวัติ</a>
+			<a class="dropdown-item" href="in15.html">ตำแหน่งที่ตั้ง</a>
+			<a class="dropdown-item" href="in16.html">ความน่าสนใจจากผู้จัดทำ</a>
+		  </div>
+      </div>
+		
+<a class="nav-item nav-link link-body-emphasis text-white" href="in17.html">ผู้จัดทำ</a>
+      
+      
+      
+     
+      
+    </nav>
+  </div>
+</div>
+
+<main class="container">
+  <div >
+    <div >
+    <img src="../zeen/zeenn/ปกกปกปกปก.png" class="img-fluid" alt="Placeholder image"> </div>
+  </div>
+
+  <div class="row mb-2 bg-white">
+    <div class="col-md-6">
+      
+    </div>
+    <div class="col-md-6 bg-white">
+      
+    </div>
+  </div>
+
+  <div class="row g-5 bg-white">
+    <div class="col-md-8">
+     
+
+      <article class="blog-post">
+        
+        <p class="blog-post-meta"><div class="container">
+		<!-- panel -->
+
+		<div class="panel panel-primary">
+
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-6 col-md-6">
+						<h3 class="panel-title">สมัครสมาชิก</h3>
+					</div>
+					<div class="col-xs-6 col-md-6 text-right">
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body">
+
+				<form class="form-horizontal" action="" method="post">
+
+                    <div class="form-group">
+						<label class="col-sm-2 control-label">First Name</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="fname" autocomplete="off">
+						</div>
+					</div>
+
+                    <div class="form-group">
+						<label class="col-sm-2 control-label">Last Name</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="lname" autocomplete="off">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Username</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="username" autocomplete="off">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Password</label>
+						<div class="col-sm-10">
+							<input type="password" class="form-control" name="password">
+						</div>
+					</div>
+
+                    <div class="form-group">
+						<label class="col-sm-2 control-label">Try-Password</label>
+						<div class="col-sm-10">
+							<input type="password" class="form-control" name="try_password">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="submit" class="btn btn-success">register</button>
+							<a href="login.php" class="btn btn-default">กลับ</a>
+						</div>
+					</div>
+				</form>
+
+			</div>
+
+			<div class="panel-footer">
+				Footer
+			</div>
+
+		</div>
+
+		<!--/panel -->
+	</div><a href="#">&nbsp;</a></p>
+		  </article>
+        <hr>
+        
+       
+        
+       
+        
+         
+       
+       
+        
+     
+     
+			
+      <article class="blog-post">
+      
+        
+
+       
+		  </article>
+        <blockquote>
+         
+        </blockquote>
+        
+     
+
+      
+        
+
+    
+       
+        
+    
+
+    </div>
+
+    <div class="col-md-4 bg-dark">
+      <div class="position-sticky" style="top: 2rem;">
+        <div class="p-4 mb-3 bg-body-tertiary rounded bg-white">
+			<!-- clock widget start -->
+<script type="text/javascript"> var css_file=document.createElement("link"); css_file.setAttribute("rel","stylesheet"); css_file.setAttribute("type","text/css"); css_file.setAttribute("href","https://s.bookcdn.com//css/cl/bw-cl-ri-pr.css?v=0.0.1"); document.getElementsByTagName("head")[0].appendChild(css_file); </script> <div id="tw_23_522600064"><div style="width:200px; height:px; margin: 0 auto;"><a href="https://hotelmix.co.th/time/bangkok-18061">กรุงเทพมหานคร</a><br/></div></div> <script type="text/javascript"> function setWidgetData_522600064(data){ if(typeof(data) != 'undefined' && data.results.length > 0) { for(var i = 0; i < data.results.length; ++i) { var objMainBlock = ''; var params = data.results[i]; objMainBlock = document.getElementById('tw_'+params.widget_type+'_'+params.widget_id); if(objMainBlock !== null) objMainBlock.innerHTML = params.html_code; } } } var clock_timer_522600064 = -1; widgetSrc = "https://widgets.booked.net/time/info?ver=2;domid=1171;type=23;id=522600064;scode=124;city_id=;wlangid=30;mode=2;details=0;background=ffffff;border_color=ffffff;color=686868;add_background=ffffff;add_color=333333;head_color=ffffff;border=1;transparent=0"; var widgetUrl = location.href; widgetSrc += '&ref=' + widgetUrl; var wstrackId = ""; if (wstrackId) { widgetSrc += ';wstrackId=' + wstrackId + ';' } var timeBookedScript = document.createElement("script"); timeBookedScript.setAttribute("type", "text/javascript"); timeBookedScript.src = widgetSrc; document.body.appendChild(timeBookedScript); </script>
+<!-- clock widget end -->
+			
+
+          <h4 class="fst-italic bg-white">&nbsp;แสดงความคิดเห็น</h4>
+          <p class="mb-0"><a href="login.php"><img src="images/ประโยชน์ของการใช้-Webboard-1024x576.jpg" class="img-fluid" alt="Placeholder image"></a></p>
+        </div>
+
+        <div>
+          <h4 class="fst-italic bg-white">งานประชาสัมพันธ์&nbsp;</h4>
+          <ul class="list-unstyled">
+            <li>
+              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top bg-white" href="https://th.trip.com/hotels/nakhon-si-thammarat-hotel-detail-47616771/b2-nakhon-si-thammarat-premier-hotel/?cityId=5449&checkIn=2025-02-13&checkOut=2025-02-14&adult=2&children=0&subStamp=3001547&crn=1&ages=&travelpurpose=0&curr=THB&fgt=1&hasAidInUrl=true&mincurr=THB&mproom=720873729&link=title&hoteluniquekey=H4sIAAAAAAAA_wD3AAj_ClwKAhgCEgQIARAAGlAIgdLe1wIYADAAOPsRmAGDptoWqAEBuAECwAEA0QF7FK5H4R53QOEBmpmZmZlxe0DoAYWP_G6IAgSJBAAAAAAAAAAAoAQAoQUzMzMzM3NJQBogZDhhNWY5ZTU4MzM1NGU1NGJkNTYwZjRiN2ZhYjBlN2MgASiT5pK9BkgBUgY5ODA5M2ZaHAoDVEhCEcgHPZtVn8s_GgNUSEIhyAc9m1Wfyz9iBXRoX1RIaLsRcAF4AIoBB0gBeADIAQGqAQcKAzAyMRAC8gEiZDhhNWY5ZTU4MzM1NGU1NGJkNTYwZjRiN2ZhYjBlN2NfMgAAAP__AQAA__9MFuW_9wAAAA&subChannel=&masterhotelid_tracelogid=940e3a1311694079a9d97b34e6705466&NewTaxDescForAmountshowtype0=F&detailFilters=17|1~17~1*80|2|1~80~2&hotelType=meta&trip_sub1=3fd581d3-0a5f-4fe6-ac1c-61fe356df3fd&locale=th-TH&fbclid=IwY2xjawIRyaxleHRuA2FlbQIxMAABHafuZ4MQPOTIAbVUfb20qkE4AqUH-J9EurWsCeH67ZhdqhKVKJgZ3T3ZJg_aem_Je_2MynSkpaiFdfl9HoyFQ">
+                <img src="images/images.jpg" alt="Placeholder image" width="150" class="img-fluid">
+<div class="col-lg-8">
+					
+           <h6 class="mb-0">โรงแรมบีทู นครศรีธรรมราช พรีเมียร์</h6>
+            
+            </div>
+              </a>
+            </li>
+            <li>
+              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top bg-white" href="https://th.trip.com/hotels/detail/?cityId=5449&hotelId=711693&checkIn=2025-02-13&checkOut=2025-02-14&adult=2&children=0&subStamp=910&crn=1&ages=&travelpurpose=0&curr=THB&link=button&hoteluniquekey=H4sIAAAAAAAAAOOay8TFJMEkxMTBKDWJiWPzsRkbWS1-CzpWi6xzf7gr08FzSYEt1_XJeQ4BPIUMYJDm0Mi4Q671deCDRIdJjFWcYMGKeQ6CYMazmQ5K9hwPH320EhCR2Ljxx3ZGBUZNsIxCqoMhjGER6wgzwhPGCGLm6GGLYuaYzqqkoMAC0cMgA9UDZFg84wxi5VgIdGwUgxMzxzz-GYy9O7Q3MoIdmOzssIOR6QTjV44FTEeaWgV2MYFUHGJi49jRwyjBcoqJ4RITwy0mhkdMrBwz7SWYXjExfGIC2fULrLCJmaGLmWESM1T5LGaIqkXMDFK85knJlhamaQbGJqbJaQpCGl8OTN7LZqQ0iZEpxOMUo5ShubGFhamZkbmlhaG5nkGqRaqFp29UYF6yqRWzFKObB2MQm6GLmZmFSZQWF3OIh5Ogw5L7-_jmnLaXAvEUYTwtEM8QxktiLcnQDfHI2C1YwNjAyNTFyCHA6MEYwVjB-IoRpPAHyOsAt03oh7sBAAA&subChannel=&masterhotelid_tracelogid=7bc985f0345cf&NewTaxDescForAmountshowtype0=F&detailFilters=17|1~17~1*80|2|0~80~2&hotelType=normal&locale=th-TH&fbclid=IwY2xjawIRyW9leHRuA2FlbQIxMAABHRx2lzidNRcXvNadtBNoKihaQVZHQIO9mOJrkDDZGy_8FTTJZ0kPHV-GPg_aem__Jdb2nQzEGnCs1sxW9s4GA">
+                <img src="images/131705304.jpg" alt="Placeholder image" width="150" class="img-fluid">
+<div class="col-lg-8">
+            <h6 class="mb-0">โรงแรม เดอะทวิน โลตัส</h6>
+            
+            </div>
+              </a>
+            </li>
+            <li>
+              <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top bg-white" href="https://th.trip.com/hotels/detail/?cityId=5449&hotelId=24312813&checkIn=2025-02-13&checkOut=2025-02-14&adult=2&children=0&subStamp=308&crn=1&ages=&travelpurpose=0&curr=THB&fgt=1&mincurr=THB&link=button&hoteluniquekey=H4sIAAAAAAAAAOP6wcjFJMEkxMTBKPWWkaN3Wvt9Vovfgo7GIBBc7uDZ-jpwh1xptUMATyEDCDQEOzQy2nJdX1xQG-AwiTGCEyx6YJGDIJjxYL6Dkj3H6hfnLAVEJC5u777JpMCoCdNoCGNYxDrCjPCEMYKYOV4wRTFzbGJyYuZ4IDSD8e3309wbGT0eVomsaw9w2MHIdILxB_8CpklzH1vsYgIpOcTExnHtPaMEyykmhktMDLeYGB4xgQx5xcTwiQlk0C-wsiZmhi5mhknMUMWzmEFqFjEzSPEaWKYZpFoaJhuZmlkaKwhp3Fw3eS-bkdIkRqYQj1OMUobmxhYWpmZG5pYWhuZ6BqkWqRaevlGBecmmVsxSjG4ejEFs5gbmrkaOUVpczCEeToKf-4JLVKaftpcC8RRhPC0QzxDGS2ItydAN8cjYLVjA2MDI1MXIIcDowRjBWMH4ihGk8AfY3wBFaX5klwEAAA&subChannel=&masterhotelid_tracelogid=09f0e91c25693&NewTaxDescForAmountshowtype0=F&detailFilters=17|1~17~1*80|2|1~80~2&hotelType=normal&locale=th-TH&fbclid=IwY2xjawIRyYxleHRuA2FlbQIxMAABHfdrSpPX8p0rf6fmAjE9qA5XArEgIlpC94XleGQayDL3eVXU-9nEkQTBOg_aem_lJ3FmoVUDTu8DMKRT_lzJA">
+                <img src="images/NS-Building_15_2880x2160_1024x768.jpg" alt="Placeholder image" width="150" class="img-fluid">
+<div class="col-lg-8">
+            <h6 class="mb-0">โรงแรมแกรนด์ฟอร์จูน นครศรีธรรมราช</h6>
+           
+            </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        
+         
+        
+           
+
+       
+          
+      </div>
+      </div>
+  </div>
+
+</main>
+
+
+  
+  
+</footer>
+<script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    
+
+</body></body>
+</html>
